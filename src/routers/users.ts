@@ -12,6 +12,7 @@ export class UserRouter{
     private initUserRoutes(){
         let userController:UserController=new UserController();
         this.router.get('/',userController.helloUser);
+        this.router.post('/register',userController.registerUser);
     }
 
 }
