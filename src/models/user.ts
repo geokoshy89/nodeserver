@@ -1,4 +1,5 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
+import * as bcrypt from 'bcrypt';
 const sequelize = new Sequelize("mysql://root:pass@localhost:3306/campaign_db");
 
 interface UserAttributes {
@@ -18,6 +19,7 @@ interface UserAttributes {
 export class UserModel extends Model<UserAttributes>{
     id?: number;
     name: string;
+    password:string;
     email: string;
     phoneNumber:string;
     ratePerCall:string;
@@ -94,3 +96,12 @@ UserModel.init(
 
     }
 );
+
+UserModel.beforeCreate((user, options) => {
+    bcrypt.genSalt(10, 
+        (err, salt)=> {
+            bcrypt.hash(user.password, salt, function(err, hash) {
+            user.password=hash;
+        });
+    });
+});
